@@ -1,0 +1,1506 @@
+---
+title: "Case Study on Cyclistic"
+subtitle: "A Bike Sharing Company"
+author: "By Somnath DasGupta"
+format: 
+  html: 
+    code-fold: true
+    toc: true
+    number-sections: true
+    number-depth: 3
+    toc-depth: 2
+    toc-style: sidebar
+    toc-location: left
+    toc-title: Contents
+    smooth-scroll: true
+    embed-resources: true
+    code-copy: true
+    highlight-style: github
+    comments: false
+    code-line-numbers: true
+    code-overflow: scroll
+    self-contained: true
+    code-block-bg: true
+    code-block-border-left: "#2E8B57"
+    css: style.css
+    theme:
+      light: pulse
+      dark: darkly
+    execute:
+      echo: true
+editor_options: 
+  chunk_output_type: inline
+editor: visual
+---
+
+## INTRODUCTION {style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-justify">
+
+Hello everyone, it's been a few months since I've been working on the Google Data Analytics Professional Certificate through Coursera. Throughout this journey I've accumulated lots of interesting, insightful and most importantly, useful information about various tools that were included with the bundle, such as Tableau, R programming, SQL, Spreadsheets.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-justify">
+
+This particular curriculum also introduced me to various sorts of standardized practices and also gave me a universal framework to follow throughout every single project along with some key data analyst terminologies and processes. Now below is a brief walk through of my thought process and overall understanding that I have gained overtime by completing this case study that is included with the course by using various tools, methods and strategy.
+
+</p>
+
+## BACKGROUND INFORMATION {style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-justify">
+
+You are working for Cyclistic, a bike-sharing company. Bikes can be unlocked from one station and returned to any other station in the system anytime.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-justify">
+
+Cyclistic has flexible pricing plans: single-ride passes, full-day passes, and annual memberships. Customers who purchase single-ride or full-day passes are referred to as casual riders. Customers who purchase annual memberships are Cyclistic members.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-justify">
+
+The director of marketing believes the company's future success depends on maximizing the number of annual memberships, as finance analysts have concluded that annual memberships are much more profitable than casual riders. She also believes that there is a good chance of converting casual riders to members as they are already aware of a Cyclistic program and have chosen it for their mobility needs.
+
+</p>
+
+## [ASK PHASE]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Some of the crucial questions asked will guide the direction of the future marketing program:
+
+</p>
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   How casual and annual members use cyclistic services differently?
+-   What is the estimate of people who choose cyclistic over any other daily commute services?
+-   Does cyclistic have any unique value proposition for their riders over any other competitor in the same segment?
+-   What is the overall past experience with different kinds of marketing platform, say it's digital marketing,influencer marketing or traditional marketing?
+
+</ul>
+
+### Key Takeways {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+1.  Identify business task.
+
+-   The main objective is to design marketing strategies for converting casual riders to annual members by understanding how they differentiate.
+-   The differentiation will be checked based upon certain parameters, which are their preferred weekday, rides per week,duration spent weekly and monthly,most visited routes etc.
+
+2.  Consider key Stakeholders.
+
+-   Director of Marketing (Lily Moreno).
+-   Marketing Analytics team.
+-   Executive team.
+
+</ul>
+
+### Deliverable {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Identify each and every pattern in which both rider types differentiate.
+-   All possible related factors which are not letting casual riders opt for the annual membership program.
+
+</ul>
+
+## [PREPARE PHASE]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Here, for this analysis, I will be using a public dataset that is made available on this [page](https://divvy-tripdata.s3.amazonaws.com/index.html){preview-link="true"}. The data has been made available by Motivate International Inc. under this [license](https://ride.divvybikes.com/data-license-agreement){preview-link="true"}.
+
+</p>
+
+### Key Task {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Load each of the datasets month wise to maintain the consecutive order.
+
+-   Download the datasets from a given online repository and then save them in a separate folder.
+
+-   Identify the doc format and check if lists of doc are readable and writable.
+
+-   Determine the credibility of data by inspecting for any vague or unwanted rows in each of the datasets and then sort accordingly.
+
+-   Check for the total number of columns and its name to concatenate successfully.
+
+</ul>
+
+### Deliverable {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Documenting the entire procedure involved in this phase.
+
+-   A short brief for each operation performed for ease of understanding.
+
+</ul>
+
+### [CODE CHUNK]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Let's load the libraries:
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(janitor)
+library(hms)
+library(geosphere)
+library(spatialrisk)
+library(distances)
+library(Distance)
+library(measurements)
+library(plotrix)
+library(lubridate)
+library(ggalt)
+library(hrbrthemes)
+library(viridis)
+library(ggridges)
+library(scales)
+library(readxl)
+library(writexl)
+library(ggiraph)
+library(viridisLite)
+library(labeling)
+library(farver)
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Importing all Datasets
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+january_2021 <- read_csv("202101-divvy-tripdata.csv")
+february_2021 <- read_csv("202102-divvy-tripdata.csv")
+march_2021 <- read_csv("202103-divvy-tripdata.csv")
+april_2021 <- read_csv("202104-divvy-tripdata.csv")
+may_2021 <- read_csv("202105-divvy-tripdata.csv")
+june_2021<- read_xlsx("202106-divvy-tripdata.xlsx")
+july_2021<- read_xlsx("202107-divvy-tripdata.xlsx")
+august_2021 <- read_xlsx("202108-divvy-tripdata.xlsx")
+september_2021 <- read_xlsx("202109-divvy-tripdata.xlsx")
+october_2021 <- read_xlsx("202110-divvy-tripdata.xlsx")
+november_2021 <- read_csv("202111-divvy-tripdata.csv")
+december_2021 <- read_csv("202112-divvy-tripdata.csv")
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Binding all datasets years wise into one using do.call() , rbind , and list() function:
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021 <- do.call("rbind",list( january_2021, february_2021, march_2021,april_2021, may_2021, june_2021,july_2021,august_2021,
+                                           september_2021,october_2021,november_2021,december_2021))
+
+
+```
+
+## [PROCESS PHASE]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Accumulating datasets for cleaning and preparing for the analysis.
+
+</p>
+
+### Key Task {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Checking for any errors or missing values within datasets.
+
+-   Removing duplicates and outliers from datasets.
+
+-   Selecting the right tools to perform these operations.
+
+-   Creating a backup of original data in case any crucial information gets eradicated during the cleaning process.
+
+-   Transform the data in a desired workable format.
+
+</ul>
+
+### Deliverable {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Applying some crucial changes to the dataset, such as changing datatype,using various functions to calculate values.
+
+-   Manipulating data by performing various computations as required.
+
+-   Stating each computation use case along with a final preview of the entire changes made.
+
+-   Documenting the step by step process in detail.
+
+</ul>
+
+### [CODE CHUNK]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Removing duplicated rows and coulmns.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021 <- all_datasets_2021[!duplicated(all_datasets_2021), ]
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Removing incomplete data through complete.cases().
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021<- all_datasets_2021[complete.cases(all_datasets_2021), ]
+
+```
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021[complete.cases(all_datasets_2021), ]
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Split date from a column using as.date() function.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For started_at column
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$date<-as.Date(all_datasets_2021$started_at)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For ended_at column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$date_of_arrival<-as.Date(all_datasets_2021$ended_at)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Renaming columns in a dataset.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021<- rename(all_datasets_2021,date_of_journey = date)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Extracting Months from date.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$month <- as.character(months(all_datasets_2021$date_of_journey))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Split time from a column using as.POSIXCT()
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For started_at column
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$journey_departure_time<-format(as.POSIXct(all_datasets_2021$started_at),
+                                                  format = "%H:%M:%S")
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Converting POSIXCT() function class 'character' to hms & difftime in order to perform calculations.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$departure_time<-as_hms(all_datasets_2021$journey_departure_time)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For ended_at column
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$journey_arrival_time<-format(as.POSIXct(all_datasets_2021$ended_at),
+                                                format = "%H:%M:%S")
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Converting POSIXCT() function class 'character' to hms & difftime in order to perform calculations.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$arrival_time<-as_hms(all_datasets_2021$journey_arrival_time)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Deleting columns from dataset.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For started_at column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$started_at <- NULL
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For ended_at column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$ended_at <- NULL
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For journey_departure_time
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$journey_departure_time <-NULL
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For journey_arrival_time.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$journey_arrival_time <- NULL
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+For removing dataset.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+remove(january_2021)
+remove(february_2021)
+remove(march_2021)
+remove(april_2021)
+remove(may_2021)
+remove(june_2021)
+remove(july_2021)
+remove(august_2021)
+remove(september_2021)
+remove(october_2021)
+remove(november_2021)
+remove(december_2021)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Difference between time using difftime() in terms of hours.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$total_mins<- difftime(all_datasets_2021$arrival_time,all_datasets_2021$departure_time ,units = "hours")
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+To remove negative time difference we converted the difference into absolute value which is positive using abs().
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+As cannot be negative in real so decided to convert it into absolute values.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$total_mins_spent <- abs(all_datasets_2021$total_mins)
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+cleaning all spaces in between each column name.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021<- all_datasets_2021 %>% 
+  janitor::clean_names()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Removing total_mins column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$total_mins <- NULL
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Creating a separate column for weekdays of journey using weekdays().
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$day_of_journey <- weekdays(all_datasets_2021$date_of_journey)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Creating a separate column for weekdays of arrival using weekdays().
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$day_of_arrival <- weekdays(all_datasets_2021$date_of_arrival)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Calculating the riders total distance travelled using geosphere() and spatialrisk() package.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$total <- spatialrisk::haversine(all_datasets_2021$start_lat,all_datasets_2021$start_lng,all_datasets_2021$end_lat,all_datasets_2021$end_lng)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Removing all the columns with zero input by converting all those columns into na's using na_if() function.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$distance <- na_if(all_datasets_2021$total, 0)
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Distance computed is in default 'meter' format, so converting it into 'km' by dividing entire column by 1000.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$total_distance <- all_datasets_2021$distance / 1000
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Removing two column from dataset.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Removing distance column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$distance <- NULL
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Removing total column
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021$total <- NULL
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Applying na.omit() for removing all NA values from dataset.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021 <- na.omit(all_datasets_2021)
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Converting this new dataset into data frame using data.frame() function to perform all sort of computation.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_datasets_2021 <- data.frame(all_datasets_2021)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Summary Of data.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+summary(all_datasets_2021)
+
+str(all_datasets_2021)
+
+```
+
+## [ANALYZE PHASE]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+In this particular phase, I will start analysing the clean and processed dataset in order to find answers to many of the questions that will help stakeholders of a cyclistic company to take up on their marketing campaign in a specific direction which, in turn will lead to retaining existing members and converting all other forthcoming users to a subscription programme.
+
+</p>
+
+### Key Task {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Various sets of comparisons were made to deep dive into the dataset in order to understand the complete scenario of customer's behaviour and their preferences
+
+-   Series of analysis are performed to get the thorough details for the entire analysis and also lay down a path of conviction to answer existing and imminent intrigues.
+
+-   Aggregate several columns to explore the various aspects of the dataset and its significance in how people perceive cyclistic services.
+
+-   Examine every nook and cranny in the dataset using various built-in R functions to get the final profiling done for both the categories of customers.
+
+-   Identifying trends and relationships for each of the member types and their utility.
+
+</ul>
+
+### Deliverable {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Established summary through several useful functions such as 'head()', 'filter()','count()', 'glimpse()', etc.
+
+-   Computations performed will illustrate a complete brief on the utility of every member type in terms of their choices and their preferences.
+
+-   Some statistical operations are also performed to develop a brief on some crucial factors that influence people's conduct.
+
+</ul>
+
+### [CODE CHUNK]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Summary of total_mins_spent column in terms of mean, median, max and min.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+Ride_duration_summary <- all_datasets_2021 %>% 
+  summarize(average_ride_duration = mean(total_mins_spent), 
+            min_ride_duration = min(total_mins_spent), 
+            median_ride_duration = median(total_mins_spent),
+            max_ride_duration = max(total_mins_spent))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+To get a overview of Ride_duration-summary.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(Ride_duration_summary)
+
+glimpse(Ride_duration_summary)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Extracting top 10 most visited stations via set of processing for member type.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Filtering default dataset and creating a new one with filtered member type member.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_trips_member <- filter(all_datasets_2021, member_casual == "member")
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Adding a new column using mutate () function from existing start_station_name column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_trips_member<-all_trips_member %>% 
+  mutate(route = paste(start_station_name,"To", sep = " "))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Concatenating existing column with newly created column using mutate() function.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_trips_member<-all_trips_member %>% 
+  mutate(route = paste(route,end_station_name, sep = " "))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Using pipe operator summarizing number of rides , mean of total_mins_spent grouping it by route and then arranging sequentially.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_route_member <- all_trips_member %>% 
+  group_by(route) %>% 
+  summarize(number_of_rides = n(),average_duration_minutes = mean(total_mins_spent)) %>% 
+  arrange(route,number_of_rides,average_duration_minutes)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Using pipe operator summarizing number of rides , mean of total_distance grouping it by route and then arranging sequentially for member type.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_distance_travelled_member <- all_trips_member %>% 
+  group_by(route) %>% 
+  summarize(number_of_rides = n(),average_distance = mean(total_distance)) %>% 
+  arrange(route,number_of_rides,average_distance)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Storing top ten station name for member type in desc order using head() function along with total duration spent.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_route_member_top10 <- head(arrange(popular_ride_route_member,desc(number_of_rides)), n = 10)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Storing top ten station name for member type in desc order using head() along with total distance travelled.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_distance_member_top10 <- head(arrange(popular_distance_travelled_member,desc(number_of_rides)), n = 10)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Glance on newly obtained data.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_route_member_top10
+
+popular_ride_distance_member_top10
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Extracting top 10 most visited stations via set of processing for casual type.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Filtering default dataset and creating a new one with filtered member type casual.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_trips_casual <- filter(all_datasets_2021, member_casual == "casual")
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Adding a new column using mutate () function from existing start_station_name column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_trips_casual<-all_trips_casual %>% 
+  mutate(route = paste(start_station_name,"To", sep = " "))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Concatenating existing column with newly created column using mutate() function.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+all_trips_casual<-all_trips_casual %>% 
+  mutate(route = paste(route,end_station_name, sep = " "))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Using pipe operator summarizing number of rides , mean of total_mins_spent grouping it by route and then arranging sequentially.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_route_casual <- all_trips_casual %>% 
+  group_by(route) %>% 
+  summarize(number_of_rides = n(),average_duration_minutes = mean(total_mins_spent)) %>% 
+  arrange(route,number_of_rides,average_duration_minutes)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Using pipe operator summarizing number of rides , mean of total_distance grouping it by route and then arranging sequentially for casual type.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_distance_travelled_casual <- all_trips_casual %>% 
+  group_by(route) %>% 
+  summarize(number_of_rides = n(),average_distance = mean(total_distance)) %>% 
+  arrange(route,number_of_rides,average_distance)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Storing top ten station name for casual member type in desc order using head() function along with total duration spent.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_route_casual_top10 <- head(arrange(popular_ride_route_casual,desc(number_of_rides)), n = 10)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Storing top ten station name for casual member type in desc order using head() along with total distance travelled.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_distance_casual_top10 <- head(arrange(popular_distance_travelled_casual,desc(number_of_rides)), n = 10)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Glance on newly obtained data.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+popular_ride_route_casual_top10
+
+popular_ride_distance_casual_top10
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Removing some of the dataset that were created to fetch some specific data.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+remove(all_trips_casual)
+remove(all_trips_member)
+remove(popular_ride_route_casual)
+remove(popular_ride_route_member)
+remove(popular_distance_travelled_casual)
+remove(popular_distance_travelled_member)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Taking a glance on start_station_name with respect to member_casual in descending order limited up to twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,start_station_name,member_casual,sort = TRUE), n = 20)
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Taking a glance on end_station_name with respect to member_casual in ascending order limited up to twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,end_station_name,member_casual,sort = TRUE), n = 20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Taking a glance on total count by filtering and comparing start_station_name and end_station_name with respect to member_casual in ascending order up to twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(filter(all_datasets_2021,start_station_name == end_station_name),member_casual,sort = TRUE), n = 20)
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Looking for a new gleam by filtering and comparing start_station_name and end_station_name along with a preview of start_station_name with respect to member_casual in ascending order limited to twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(filter(all_datasets_2021,start_station_name == end_station_name),start_station_name,member_casual,sort = TRUE), n = 20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Getting a preview by counting start_station_name with respect to day_of_journey by sorting it in ascending order limited to twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,start_station_name,day_of_journey,sort = TRUE),n=20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Taking a glance on dataset by counting start_station_name, day_of_journey with respect to months alongside sorting the computation in ascending order limited upto twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,start_station_name,day_of_journey, month,sort = TRUE),n=20)
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Previewing and pulling out the peak hours from departure time along with weekdays limited up to twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,departure_time,day_of_journey,sort = TRUE),n = 20)
+
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Previewing and pulling out the peak hours from arrival time along with weekdays limited up to twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,arrival_time,day_of_arrival,sort = TRUE), n = 20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Dividing into very specific information using count to identify number of rides happened each weekday followed by types of members.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021, day_of_journey , member_casual,sort = FALSE),n = 20)
+
+head(count(all_datasets_2021, day_of_arrival , member_casual,sort = FALSE),n = 20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Taking a glance on distinct values of these column to understand assigned allocation of its sub-category using table function.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+table(all_datasets_2021$rideable_type) 
+
+table(all_datasets_2021$member_casual)
+
+table(all_datasets_2021$month)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Checking on ratio of rideable type sub category with member type to get a gleam on the distribution.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,rideable_type,member_casual,sort = TRUE), n = 20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Glimpse of the maximum distance travelled by a rider using max function.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(max(all_datasets_2021$total_distance), sort = TRUE)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Glimpse of the dataset through counting total_distance and month using sort function limited upto twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,total_distance, month, sort = FALSE), n = 20)
+
+head(count(all_datasets_2021,max(total_distance), month, sort = FALSE), n = 20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Glimpse of the dataset based on the total_mins\_ spent column and month followed by membership type in descending and ascending order limited upto 30 entries maximum.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+head(count(all_datasets_2021,total_mins_spent, month, sort = TRUE), n = 20)
+
+head(count(all_datasets_2021,max(total_mins_spent), month,member_casual, sort = TRUE), n = 20)
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Checking Quantile values and performing winsorization on the dataset.
+
+</p>
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+For total_mins_spent column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+quantile(all_datasets_2021$total_mins_spent,probs = seq(.99,1.0,by=0.001))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+For total_distance column.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+quantile(all_datasets_2021$total_distance,probs = seq(.75,1.0,by=.05))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+Fetching data using specific member type along with day_of_journey and max of total mins spent column limited upto twenty entries.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+
+head(count(filter(all_datasets_2021,member_casual == 'casual'),member_casual,day_of_journey,max(total_mins_spent),sort = TRUE),n = 20)
+
+head(count(filter(all_datasets_2021,member_casual == 'member'),member_casual,day_of_journey,max(total_mins_spent),sort = TRUE),n = 20)
+
+```
+
+## [SHARE PHASE]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+### Key Task {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Establish the best way to share visualization using R and tableau.
+
+-   Illustrate every minute detail backed with explanation.
+
+-   Choose adequate graph type to conclude findings along with legends, labels and heading to improve readability and interpretation.
+
+-   Ensure work is easily accessible.
+
+</ul>
+
+### Deliverable {style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Convey findings accompanied with illustration and explanation.
+
+-   Put a short description of every visualization added under this phase.
+
+</ul>
+
+### [VISUALIZATION]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Here we are trying to look through overall distribution of members types based on total duration spent on weekdays.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+ggplot(data = all_datasets_2021)+ aes(x = day_of_journey, y = as.numeric(total_mins_spent),fill = member_casual) + 
+  geom_bar(stat = "identity", width = 0.5, position = 'stack') + scale_fill_manual(values = c("red", "blue")) +
+labs(title = "Cyclistic Data: Week Day Vs Total Duration Spent",x = "Weekday of Journey", 
+     y = "Total Duration",fill = "Member Type") + theme(axis.text.x = element_text(angle = 60,hjust = 1)) + theme_minimal()
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Here getting a glimpse on the utilization of rideable type by member type and then distributed across weekdays.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+ggplot(data = all_datasets_2021) +  (mapping =  aes(x = member_casual, fill = rideable_type)) + 
+  geom_bar(width = 0.5, alpha = 2.5) + facet_wrap(~day_of_journey) + 
+  scale_fill_manual(values = c("Black", " yellow", "green")) +
+  labs(title = "Cyclistic Data: Member Type preference WIth Rideable Type",x = "Member Type", 
+       y = "No. of Count",fill = "Rideable Type") +
+  theme(axis.text.x = element_text(angle = 60,hjust = 1)) + theme_classic()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Glimpse on the member type based on total duration spent on total distance travelled.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot( data = all_datasets_2021) + 
+  aes(x = hms::as_hms(total_mins_spent), y = total_distance, shape = member_casual,color = member_casual) +
+  scale_color_manual(name = "Member Type",values = c("Black", " Purple")) + 
+  scale_shape_manual(name = "Member Type",values = c(19,17)) + 
+  geom_point(size = 3,alpha = 0.5,stroke = 1)+
+  labs(title = "Cyclistic Data: Total Minutes spent with Total Distance Travelled",
+       caption = "Comparing the Difference by Member Type",x = "Total Minutes Spent", y = "Total Distance Travelled") + 
+  theme_minimal()
+   
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Taking a look on top 10 stations based on average duration spent by casual member type.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot( data = popular_ride_route_casual_top10) + aes(x = as_hms(average_duration_minutes) ,y = route, group = 1) + 
+  geom_line(color="Red") + geom_point(shape=21, color="black", fill="blue", size=6) +
+  labs( title = "Top 10 Most Visited Stations",subtitle = "For Casual Riders", 
+        x = "Duration Spent (In Hours)", y = "Station Name", 
+        caption = "Popularity of stations is determined by no of rides & average distance travelled") +
+  theme_minimal()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Taking a look on top 10 stations based on average duration spent by subscribed member type.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot( data = popular_ride_route_member_top10) + aes(x = as_hms(average_duration_minutes) ,y = route, group = 1) + 
+  geom_line(color="green") + geom_point(shape=21, color="black", fill="Brown", size=6) +
+  labs( title = "Top 10 Most Visited Stations",subtitle = "For Membership Riders", 
+        x = "Duration Spent (In Hours)", y = "Station Name", 
+        caption = "Popularity of stations is determined by no of rides & average distance travelled") +theme_minimal()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Taking a look on top 10 stations based on average distance travelled by casual member type.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(data = popular_ride_distance_casual_top10) + aes(x = average_distance, y = route, group = 1) +
+  geom_line(color="orange") +geom_point(shape = 21, color = "black", fill = "dark green", size = 6) + 
+  labs( title = "Top 10 Most Visited Stations",subtitle = "For Casual Riders", 
+        x = "Duration Spent (In Hours)", y = "Station Name",
+        caption = "Popularity of stations is determined by no of rides & average time spent") +theme_light()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Taking a look on top 10 stations based on average distance travelled by subscribed member type.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(data = popular_ride_distance_member_top10) + aes(x = average_distance, y = route, group = 1) + geom_line(color="orange") +
+  geom_point(shape = 21, color = "black", fill = "dark green", size = 6) + 
+  labs( title = "Top 10 Most Visited Stations",subtitle = "For Membership Riders", 
+        x = "Duration Spent (In Hours)", y = "Station Name", 
+        caption = "Popularity of stations is determined by no of rides & average time spent") +theme_ipsum()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Overview on the distribution split of member type based on each weekdays of every month.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(data = all_datasets_2021) + geom_col(aes(x = day_of_journey,y = month, fill = member_casual), position = "identity") + 
+  scale_fill_manual(values = c("blue","red")) + labs(title = "Busiest WeekDay of The Month", 
+subtitle = " Followed By Member Type", x = "Day of Journey" , y = "Month", fill = "Member Type") + 
+  theme_bw()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Getting a snap on overall allocation of total duration spent on every month based on each weekdays.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(data = all_datasets_2021) + geom_col(mapping = aes(x = month, y = as.numeric(as.difftime(total_mins_spent)),
+  fill = day_of_journey)) + 
+  scale_fill_manual(values = c("blue", "Orange","Dark Green","violet","Red","Brown","black")) + 
+  labs(title = "Monthly time duration spent", subtitle = "Followed By Weekday", x = "Total Time Duration",
+  y =" Month", fill = " Day of Journey") + 
+  theme(axis.text.x = element_text(angle = 40, vjust = 0.5, hjust=1))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Overview of total distance travelled by each member type on every month.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(data = all_datasets_2021) + aes(x = month, y = total_distance, fill = member_casual) + 
+  geom_bar(stat ="identity",position = "dodge") + scale_fill_manual(values = c("blue","orange"))+
+  labs(title = "Distance Travelled by Month", subtitle = "Followed by Member Type", x = " Month",
+       y = "Total Distance", fill = "Member Type") +  
+  theme(axis.text.x = element_text(angle = 40, vjust = 0.5, hjust=1),
+        plot.background = element_rect(fill = "#D2B48C"))
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Taking a glance on rideable type distribution on each weekdays of every month.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(data = all_datasets_2021) + aes(x = day_of_journey, y = month) + 
+  geom_col(aes(fill = rideable_type),width = .5,position = 'identity') + 
+  scale_fill_manual(values = c("Red","Blue","Dark green"))+
+  labs(title = "Number of Rides Per Weeek",subtitle = "Followed By Rideable Type",
+       x ="Month", y = "Day Of Journey", fill = "Rideable Type") +
+  theme(axis.text.x = element_text(angle = 50, vjust = 0.5, hjust=1)) + 
+  theme_classic()
+
+```
+
+<p style="font-size: 100%; font-family: Bookman Old Style; font-weight: bold" class="reveal-text-center">
+
+Overview on the monthly usage of rideable type.
+
+</p>
+
+```{r warning=FALSE, message=FALSE}
+
+ggplot(data = all_datasets_2021) + aes(x = month, fill = rideable_type) + 
+  stat_count(width = 0.5) + scale_fill_manual(values = c("Dark Blue","Maroon","Purple")) +
+labs( title = "Rideable type Popularity By Months", x = "Months", y = "Count", fill = "Rideable Type") + 
+  theme(axis.text.x = element_text(angle = 40, vjust = 0.5, hjust = 1))
+
+```
+
+## MAP VISUALS.
+
+![](Main%20Map.png){.fragment width="1064" height="697"}
+
+```         
+                              Complete Map
+```
+
+![](Start%20Station%20Name.png){.fragment width="521" height="698"}
+
+```         
+                Start Station Name
+```
+
+![](End%20Station%20Name.png){.fragment width="493" height="700"}
+
+```         
+                End Station Name
+```
+
+## [ACT PHASE]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<p style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+This crucial phase will be carried out by the executive team, Director of Marketing (Lily Moreno) and the Marketing Analytics team based on the above analysis made.
+
+</p>
+
+## [CONCLUSION]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Cyclistic have a greater number of subscribed members as compared to casual riders and, based on the overall analysis, the ratio in which casual riders differ from subscribed members is only 13.76%.
+
+-   Casual riders mostly prefer the weekend slot for choosing a ride with Cyclistic, which is Friday, Saturday and Sunday.
+
+-   Subscribed members in general prefer weekday slots for choosing a ride with Cyclistic,which is Monday to Thursday, as well as the weekend slot.
+
+-   Based on twelve month's data, it was observed that casual riders took the ride for the longest duration of time as compared to subscribed members and also the month which recorded the highest spent time was July.
+
+-   Distribution of rideable type seems completely unbalanced and inappropriate as docked bikes seem to have the least significance in terms of the usage distribution where only one bike was rented within an entire year by a subscribed member as compared to casual riders.
+
+-   The overall month's wise distribution shows that Saturdays and Sundays seem to attract more crowds as compared to all other weekdays and its constant for every single month.
+
+-   Peak hours are mostly from 5'oclock to 7'oclock in the evening for both departure and arrival by each of the member types.
+
+-   Out of three rideable options, the classic bike is the most endorsed one, followed by the electric bike and the docked bike, which have very minimal interaction with subscribed members especially.
+
+</ul>
+
+## [DELIVERABLE]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   From the detailed analysis, it was learned that we need to cater to different sets of casual riders, first, who pursue cyclistic services in a completely oriented manner, and second, who just use them in an emergency or may be once in a while type.
+
+-   One more thing needs to be noted to convert the maximum number of casual riders personified ads and campaigns are very essential and necessary.
+
+-   The other thing is, it's more about how to cater your services in a way which can have multiple unique value propositions based on the type of customers it is directed or promoted to.
+
+-   It's better to push some integral benefits that most people are surrounded by today, such as health, and then diversify health into various subsets like protection from cancer, arthritis,stroke etc to specific groups of casual riders.
+
+-   Firstly introduce one month trial plan with all yearly perks and benefits and then start charging based on a monthly basis or annual basis.Also, use the old trick in the book by adding their payment information in advance and enabling auto payment on both a monthly, quarterly and yearly basis.
+
+-   Remove the one-day subscription plan and include a minimum monthly plan with all the benefits that a member gets yearly and price it higher as compared to the annual plan and discounting should be done in a descending manner.
+
+-   To enable the auto debit feature, ensure users the data is absolutely safe with the cyclistic plus add a tagline saying "We are never hard on commitments".
+
+-   Overall distribution of bikes is completely inappropriate as docked bike is just not considered by any members and it is mostly used by casual members due to unavailability. It is essential that company should consider converting all rideable types to electric bikes with different specifications and variants as the future is electric.
+
+-   To make the subscription plan even more fascinating, some additional gear of its own brand can also be introduced or an association with a renowned brand can also be perfect.
+
+-   Try hosting or sponsoring any big events that promote cyclistic and its services under all phenomena and also introduce flesh sales on any special events or occasions as it may help attract more number of customers.
+
+</ul>
+
+## [RESOURCES]{data-incremental="" style="font-family: Bookman Old Style;"}
+
+<ul style="font-size: 100%; font-family: Bookman Old Style" class="reveal-text-center">
+
+-   Stack Overflow.
+-   RStudio and Kaggle community.
+-   Dataset was made available by Motivate International Inc.
+
+</ul>
